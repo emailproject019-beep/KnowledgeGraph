@@ -32,3 +32,32 @@ class SomniaClient:
         self.logger.info(f"Fetching provenance for commit_id={commit_id}")
         # TODO: implement on-chain read
         return {}
+
+from web3 import Web3
+from config import SOMNIA_RPC, PROVENANCE_CONTRACT, PROVENANCE_ABI
+
+class SomniaClient:
+    def __init__(self, wallet, private_key):
+        self.w3 = Web3(Web3.HTTPProvider(SOMNIA_RPC))
+        self.wallet = wallet
+        self.private_key = private_key
+        self.contract = self.w3.eth.contract(
+            address=PROVENANCE_CONTRACT,
+            abi=PROVENANCE_ABI
+        )
+
+    def submit_commit(self, merkle_root, metadata_uri):
+        tx = self.contract.functions.anchorProvenance(
+            merkle_root,
+            metadata_uri
+        ).build_transaction({
+            "from": self.wallet,
+            "nonce": self.w3.eth.get_transaction_count(self.wallet),
+            "gas": 300000,
+            "gasPrice": self.w3.eth.gas_price
+        })
+
+        signed = self.w3.eth.account.sign_transaction(tx, self.private_key)
+        tx_hash = self.w3.eth.send_raw_transaction(signed.rawTransaction)
+        return tx_hash.hex()
+
