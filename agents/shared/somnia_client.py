@@ -1,5 +1,7 @@
 from typing import Any, Dict, List
 from .logging import get_logger
+def submit_commit(self, merkle_root, metadata_uri):
+    return "0xDEADBEEF"
 
 
 class SomniaClient:
