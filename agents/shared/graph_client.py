@@ -22,3 +22,14 @@ class GraphClient:
         self.logger.info(f"Running graph query: {query}")
         # TODO: implement query
         return []
+
+class GraphClient:
+    def __init__(self):
+        self.triples = []
+
+    def insert_triples(self, triples):
+        self.triples.extend(triples)
+        return True
+
+    def get_all_triples(self):
+        return self.triples
