@@ -79,3 +79,15 @@ class OrchestratorAgent(BaseAgent):
         except KeyboardInterrupt:
             self.logger.info("OrchestratorAgent interrupted.")
             self.shutdown()
+for raw in self.queue.consume():
+    proposal = self.extraction_agent.run(raw)
+    validated = self.validator_agent.run(proposal)
+
+    self.graph.insert_triples(validated.triples)
+
+    merkle_root = validated.merkle_root
+    metadata_uri = validated.metadata_uri
+
+    tx = self.somnia.submit_commit(merkle_root, metadata_uri)
+    print("Anchored:", tx)
+
