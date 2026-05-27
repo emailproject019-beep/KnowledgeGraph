@@ -25,3 +25,12 @@ class QueueClient:
         # TODO: implement real consumption
         while False:
             yield {}
+
+class QueueClient:
+    def __init__(self, seed_records=None):
+        self.records = seed_records or []
+
+    def consume(self):
+        for r in self.records:
+            yield r
+
