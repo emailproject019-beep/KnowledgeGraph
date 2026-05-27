@@ -33,3 +33,15 @@ class GraphClient:
 
     def get_all_triples(self):
         return self.triples
+
+class GraphClient:
+    def __init__(self):
+        self.triples = []
+
+    def insert_triples(self, triples):
+        self.triples.extend(triples)
+        return True
+
+    def get_all_triples(self):
+        return self.triples
+
