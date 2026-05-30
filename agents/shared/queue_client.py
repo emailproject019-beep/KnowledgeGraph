@@ -34,3 +34,21 @@ class QueueClient:
         for r in self.records:
             yield r
 
+class QueueClient:
+    """
+    Minimal queue implementation for AKG Builder.
+    Accepts a list of RawRecord objects and yields them one by one.
+    """
+
+    def __init__(self, seed_records=None):
+        self.records = seed_records or []
+
+    def add_record(self, record):
+        """Append a new RawRecord to the queue."""
+        self.records.append(record)
+
+    def consume(self):
+        """Yield records in FIFO order."""
+        while self.records:
+            yield self.records.pop(0)
+
