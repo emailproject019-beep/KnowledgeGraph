@@ -32,18 +32,21 @@ jobs:
           if [ -d tests ]; then pytest -q; else echo "No Python tests found"; fi
 
       # -----------------------------
-      # NODE + HARDHAT ENVIRONMENT
+      # NODE + HARDHAT ENVIRONMENT (Optional)
       # -----------------------------
       - name: Set up Node.js
+        if: hashFiles('package.json') != ''
         uses: actions/setup-node@v4
         with:
           node-version: "20"
 
       - name: Install Node dependencies
+        if: hashFiles('package.json') != ''
         run: |
           npm install
 
       - name: Compile Solidity contracts
+        if: hashFiles('package.json') != '' && hashFiles('hardhat.config.ts') != ''
         run: |
           npx hardhat compile
 
@@ -51,7 +54,7 @@ jobs:
       # OPTIONAL: DEPLOY TO SOMNIA
       # -----------------------------
       - name: Deploy KGProvenance to Somnia Testnet
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && hashFiles('scripts/deploy_kg_provenance.ts') != ''
         env:
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
         run: |
@@ -66,6 +69,7 @@ jobs:
           flake8 agents || true
 
       - name: Node linting
+        if: hashFiles('package.json') != ''
         run: |
           npm install --save-dev eslint
           npx eslint . || true
