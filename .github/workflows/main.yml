@@ -32,7 +32,16 @@ jobs:
           if [ -d tests ]; then pytest -q; else echo "No Python tests found"; fi
 
       # -----------------------------
+      # OPTIONAL: LINTING
+      # -----------------------------
+      - name: Python linting
+        run: |
+          pip install flake8
+          flake8 agents || true
+
+      # -----------------------------
       # NODE + HARDHAT ENVIRONMENT (Optional)
+      # Only runs if package.json exists
       # -----------------------------
       - name: Set up Node.js
         if: hashFiles('package.json') != ''
@@ -52,6 +61,7 @@ jobs:
 
       # -----------------------------
       # OPTIONAL: DEPLOY TO SOMNIA
+      # Only runs if script exists and on main branch
       # -----------------------------
       - name: Deploy KGProvenance to Somnia Testnet
         if: github.ref == 'refs/heads/main' && hashFiles('scripts/deploy_kg_provenance.ts') != ''
@@ -59,14 +69,6 @@ jobs:
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
         run: |
           npx hardhat run scripts/deploy_kg_provenance.ts --network somnia
-
-      # -----------------------------
-      # OPTIONAL: LINTING
-      # -----------------------------
-      - name: Python linting
-        run: |
-          pip install flake8
-          flake8 agents || true
 
       - name: Node linting
         if: hashFiles('package.json') != ''
