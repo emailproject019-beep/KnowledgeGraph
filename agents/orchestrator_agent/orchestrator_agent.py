@@ -91,3 +91,14 @@ for raw in self.queue.consume():
     tx = self.somnia.submit_commit(merkle_root, metadata_uri)
     print("Anchored:", tx)
 
+from agents.shared.merkle import merkle_root
+
+...
+
+validated = self.validator_agent.run(proposal)
+triples = validated.triples
+
+root = merkle_root(triples)
+tx = self.somnia.submit_commit(root, validated.metadata_uri)
+
+print("Anchored provenance:", tx)
