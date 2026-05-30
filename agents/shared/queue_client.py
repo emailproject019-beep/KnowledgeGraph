@@ -52,3 +52,27 @@ class QueueClient:
         while self.records:
             yield self.records.pop(0)
 
+
+from typing import Any, Dict, Optional
+from .logging import get_logger
+
+class QueueClient:
+    """
+    Abstraction over a message queue (Kafka, Redis, SQS, etc.).
+    For testnet, can use in-memory implementation or Kafka.
+    """
+
+    def __init__(self, config: Dict[str, Any]) -> None:
+        self.config = config
+        self.logger = get_logger(self.__class__.__name__)
+        self.records = config.get("seed_records", [])
+
+    def publish(self, topic: str, message: Dict[str, Any]) -> None:
+        self.logger.info(f"Publishing message to {topic}: {message}")
+        self.records.append(message)
+
+    def consume(self, topic: str, timeout: Optional[float] = None):
+        """Generator yielding messages from a topic."""
+        self.logger.info(f"Consuming from topic={topic}")
+        for r in self.records:
+            yield r
