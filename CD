@@ -1,7 +1,1 @@
-npm install --save-dev hardhat @nomicfoundation/hardhat-toolbox @nomicfoundation/hardhat-viem dotenv
 
-SOMNIA_RPC = "https://testnet.somnia.network"
-PROVENANCE_CONTRACT = "YOUR_DEPLOYED_CONTRACT_ADDRESS"  # Deploy your contract first
-PROVENANCE_ABI = [
-    # Get this from your Solidity contract compilation
-]
