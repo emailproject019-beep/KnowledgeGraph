@@ -42,3 +42,20 @@ contract KGProvenance {
     }
 }
 
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract Provenance {
+    event ProvenanceAnchored(bytes32 indexed merkleRoot, string metadataUri);
+    
+    mapping(bytes32 => string) public provenanceRecords;
+    
+    function anchorProvenance(bytes32 merkleRoot, string memory metadataUri) public {
+        provenanceRecords[merkleRoot] = metadataUri;
+        emit ProvenanceAnchored(merkleRoot, metadataUri);
+    }
+    
+    function getProvenance(bytes32 merkleRoot) public view returns (string memory) {
+        return provenanceRecords[merkleRoot];
+    }
+}
